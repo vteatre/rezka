@@ -39,10 +39,8 @@ const loop1 = JSON.parse(JSON.stringify(Array.from(Array(1300).keys())));
 const loop2 = JSON.parse(JSON.stringify(Array.from(Array(1000).keys())));
 
 async.eachOfLimit(loop1, 15, function (key, index, callback) {
-    return callback();
     if (key < 1000) return callback();
     async.eachOfLimit(loop2, 1000, function (key2, index, callback) {
-        return callback();
         const id = key * 1000 + key2;
         https.get('https://st.kp.yandex.net/images/film_iphone/iphone360_' + id + '.jpg', function(response) {
             if (response.statusCode === 301 || response.statusCode === 302) {
