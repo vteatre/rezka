@@ -27,7 +27,7 @@ function save(s) {
         clearInterval(se);
         save(1);
         console.timeEnd('DONE');
-        return process.exit(0);
+        //return process.exit(0);
     }
 }
 
@@ -63,5 +63,5 @@ async.eachOfLimit(loop1, 15, function (key, index, callback) {
     clearInterval(se);
     save(1);
     console.timeEnd('DONE');
-    return process.exit(0);
+    //return process.exit(0);
 });
