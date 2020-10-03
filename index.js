@@ -60,16 +60,22 @@ async.eachOfLimit(loop1, 15, function (key, index, callback) {
                             }
                         }
                     }
-                    callback();
+                    try {
+                        callback();
+                    } catch (e) {}
                 }
             )
             .on('error', err => {
                 if (err) console.log(err);
-                callback();
+                try {
+                    callback();
+                } catch (e) {}
             });
         request.setTimeout(5000,function (err) {
             if (err) console.log(err);
-            callback();
+            try {
+                callback();
+            } catch (e) {}
         });
     }, function (e) {
         callback();
