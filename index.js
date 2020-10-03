@@ -45,28 +45,35 @@ const loop2 = JSON.parse(JSON.stringify(Array.from(Array(1000).keys())));
 
 async.eachOfLimit(loop1, 15, function (key, index, callback) {
     if (key < 1240) return callback();
-    console.log(key);
     async.eachOfLimit(loop2, 1000, function (key2, index, callback) {
         const id = key * 1000 + key2;
-        https.get('https://st.kp.yandex.net/images/film_iphone/iphone360_' + id + '.jpg', function(response) {
-            if (response.statusCode === 301 || response.statusCode === 302) {
-                if (response.headers.location !== 'https://st.kp.yandex.net/images/no-poster.gif') {
-                    if (ids[num]) {
-                        ids[num][id] = response.headers.location;
+        const request = https
+            .get('https://st.kp.yandex.net/images/film_iphone/iphone360_' + id + '.jpg', response => {
+                    if (response.statusCode === 301 || response.statusCode === 302) {
+                        if (response.headers.location !== 'https://st.kp.yandex.net/images/no-poster.gif') {
+                            if (ids[num]) {
+                                ids[num][id] = response.headers.location;
+                            }
+                            if (Object.keys(ids[num]).length >= 1000) {
+                                num = num + 1;
+                                ids[num] = {};
+                            }
+                        }
                     }
-                    if (Object.keys(ids[num]).length >= 1000) {
-                        num = num + 1;
-                        ids[num] = {};
-                    }
+                    callback();
                 }
-            }
+            )
+            .on('error', err => {
+                callback();
+            });
+        request.setTimeout(5000,function (err) {
+            if (err) console.log(err);
             callback();
         });
     }, function (e) {
         callback();
     });
 }, function (e) {
-    console.log('TUT');
     clearInterval(intervalId);
     save(1);
     console.timeEnd('DONE');
