@@ -26,7 +26,7 @@ function save(s) {
             console.log('NOT SAVE:', n + '.json', 'LAST ID:', ids_keys[ids_keys.length - 1], 'NUM IDs:', ids_keys.length, 'TIME:', (new Date()) - start_time, 'ms');
         }
     });
-    if (((new Date()) - start_time) > 1500000 && s !== 1) {
+    if (((new Date()) - start_time) > 2500000 && s !== 1) {
         clearInterval(intervalId);
         save(1);
         console.timeEnd('DONE');
@@ -44,7 +44,7 @@ const loop1 = JSON.parse(JSON.stringify(Array.from(Array(1300).keys())));
 const loop2 = JSON.parse(JSON.stringify(Array.from(Array(1000).keys())));
 
 async.eachOfLimit(loop1, 15, function (key, index, callback) {
-    if (key < 1240) return callback();
+    if (key < 1000) return callback();
     async.eachOfLimit(loop2, 1000, function (key2, index, callback) {
         const id = key * 1000 + key2;
         const request = https
@@ -64,6 +64,7 @@ async.eachOfLimit(loop1, 15, function (key, index, callback) {
                 }
             )
             .on('error', err => {
+                if (err) console.log(err);
                 callback();
             });
         request.setTimeout(5000,function (err) {
