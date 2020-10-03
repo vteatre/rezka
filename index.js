@@ -44,7 +44,8 @@ const loop1 = JSON.parse(JSON.stringify(Array.from(Array(1300).keys())));
 const loop2 = JSON.parse(JSON.stringify(Array.from(Array(1000).keys())));
 
 async.eachOfLimit(loop1, 15, function (key, index, callback) {
-    if (key < 1200) return callback();
+    if (key < 1290) return callback();
+    console.log(key);
     async.eachOfLimit(loop2, 1000, function (key2, index, callback) {
         const id = key * 1000 + key2;
         https.get('https://st.kp.yandex.net/images/film_iphone/iphone360_' + id + '.jpg', function(response) {
@@ -65,6 +66,7 @@ async.eachOfLimit(loop1, 15, function (key, index, callback) {
         callback();
     });
 }, function (e) {
+    console.log('TUT');
     clearInterval(intervalId);
     save(1);
     console.timeEnd('DONE');
