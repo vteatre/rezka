@@ -13,12 +13,14 @@ function save(s) {
     let num_keys = Object.keys(ids);
     num_keys.forEach(function (n) {
         let ids_keys = Object.keys(ids[n]);
-        if (ids_keys.length >= 10000 || s === 1) {
-            fs.appendFile('./public/' + n + '.json', JSON.stringify(ids[n]), function (err) {
-                if (err) console.log(err);
+        if (ids_keys.length >= 1000 || s === 1) {
+            try {
+                fs.appendFileSync('./public/' + n + '.json', JSON.stringify(ids[n]));
                 console.log('SAVE:', n + '.json', 'LAST ID:', ids_keys[ids_keys.length - 1]);
                 delete ids[n];
-            });
+            } catch (err) {
+                console.log(err);
+            }
         } else {
             console.log('NOT SAVE:', n + '.json', 'LAST ID:', ids_keys[ids_keys.length - 1], 'NUM IDs:', ids_keys.length, 'TIME:', (new Date()) - start_time, 'ms');
         }
@@ -27,7 +29,9 @@ function save(s) {
         clearInterval(se);
         save(1);
         console.timeEnd('DONE');
-        //return process.exit(0);
+        setTimeout(function () {
+            return process.exit(0);
+        }, 10000);
     }
 }
 
@@ -48,7 +52,7 @@ async.eachOfLimit(loop1, 15, function (key, index, callback) {
                     if (ids[num]) {
                         ids[num][id] = response.headers.location;
                     }
-                    if (Object.keys(ids[num]).length >= 10000) {
+                    if (Object.keys(ids[num]).length >= 1000) {
                         num = num + 1;
                         ids[num] = {};
                     }
@@ -63,5 +67,7 @@ async.eachOfLimit(loop1, 15, function (key, index, callback) {
     clearInterval(se);
     save(1);
     console.timeEnd('DONE');
-    //return process.exit(0);
+    setTimeout(function () {
+        return process.exit(0);
+    }, 10000);
 });
