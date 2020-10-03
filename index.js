@@ -4,16 +4,17 @@ const fs = require('fs');
 const async = require('async');
 const https = require('https');
 
+let intervalId;
 let start_time = new Date();
 let ids = {};
 let num = 1;
 ids[num] = {};
 
-function save(s) {
+function save() {
     let num_keys = Object.keys(ids);
     num_keys.forEach(function (n) {
         let ids_keys = Object.keys(ids[n]);
-        if (ids_keys.length >= 1000 || s === 1) {
+        if (ids_keys.length >= 1000) {
             try {
                 fs.appendFileSync('./public/' + n + '.json', JSON.stringify(ids[n]));
                 console.log('SAVE:', n + '.json', 'LAST ID:', ids_keys[ids_keys.length - 1]);
@@ -25,19 +26,11 @@ function save(s) {
             console.log('NOT SAVE:', n + '.json', 'LAST ID:', ids_keys[ids_keys.length - 1], 'NUM IDs:', ids_keys.length, 'TIME:', (new Date()) - start_time, 'ms');
         }
     });
-    if (((new Date()) - start_time) > 1500000 && s !== 1) {
-        clearInterval(se);
-        save(1);
-        console.timeEnd('DONE');
-        setTimeout(function () {
-            return process.exit(0);
-        }, 10000);
-    }
 }
 
 console.time('DONE');
 
-var se = setInterval(save, 10000);
+intervalId = setInterval(save, 10000);
 
 const loop1 = JSON.parse(JSON.stringify(Array.from(Array(1300).keys())));
 const loop2 = JSON.parse(JSON.stringify(Array.from(Array(1000).keys())));
@@ -64,8 +57,7 @@ async.eachOfLimit(loop1, 15, function (key, index, callback) {
         callback();
     });
 }, function (e) {
-    clearInterval(se);
-    save(1);
+    clearInterval(intervalId);
     console.timeEnd('DONE');
     setTimeout(function () {
         return process.exit(0);
