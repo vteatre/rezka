@@ -40,11 +40,11 @@ console.time('DONE');
 
 intervalId = setInterval(save, 10000);
 
-const loop1 = JSON.parse(JSON.stringify(Array.from(Array(400).keys())));
+const loop1 = JSON.parse(JSON.stringify(Array.from(Array(200).keys())));
 const loop2 = JSON.parse(JSON.stringify(Array.from(Array(1000).keys())));
 
 async.eachOfLimit(loop1, 15, function (key, index, callback) {
-    if (key < 200) return callback();
+    //if (key < 200) return callback();
     async.eachOfLimit(loop2, 1000, function (key2, index, callback) {
         const id = key * 1000 + key2;
         const request = https
