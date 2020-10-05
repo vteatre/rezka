@@ -4,7 +4,7 @@ const fs = require('fs');
 const async = require('async');
 const https = require('https'); 
 
-let intervalId;
+let intervalId; 
 let start_time = new Date();
 let ids = {};
 let num = 1;
