@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const async = require('async');
-const https = require('https');
+const https = require('https'); 
 
 let intervalId;
 let start_time = new Date();
